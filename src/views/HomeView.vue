@@ -82,15 +82,11 @@ export default {
   methods: {
     async getData () {
       store.state.ipAddress = await getIpAddress()
-      console.log(this.ipAddress)
       if (this.ipAddress) {
         const res = await getIpLocation(this.ipAddress)
         if (res) {
           store.state.location.key = res.ParentCity.Key
           store.state.location.name = res.ParentCity.EnglishName
-          console.log(this.location)
-          console.log(this.location)
-          console.log('here')
           store.state.weather.dForecast = await getWeatherData('d')
           store.state.weather.hForecast = await getWeatherData('h')
           console.log(this.weather)
