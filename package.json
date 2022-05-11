@@ -1,0 +1,11 @@
+{
+  "name": "accuw-rcm",
+  "version": "1.0.0",
+  "description": "VueJS Web App consuming Accuweather API to display 3-day weather forecast.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Jim Zandueta <jimzandueta@gmail.com>",
+  "license": "ISC"
+}
