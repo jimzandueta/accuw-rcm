@@ -46,8 +46,10 @@ export default new Vuex.Store({
       state.mainBG = url
     },
     updateWeather (state, weather) {
-      console.log('weather', weather)
       state.weather = weather
+    },
+    toggleIsSearched (state) {
+      state.isSearched = !state.isSearched
     }
   },
   actions: {

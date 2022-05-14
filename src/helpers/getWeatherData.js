@@ -17,7 +17,6 @@ const getWeatherData = async (t) => {
   if (!type) return null
   try {
     const res = await axios.get(`${process.env.VUE_APP_DOMAIN_ACCUW_FORECAST}${type}${store.state.location.key}?"language=${store.state.api.lang}&apikey=${store.state.api.key}`)
-    console.log('w', res.data)
     return res.data
   } catch (err) {
     console.log(err)
