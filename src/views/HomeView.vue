@@ -230,10 +230,15 @@ export default {
       this.display.date = dt.format('dddd, DD MMMM YYYY')
       this.display.city = this.location.city
       this.display.country = this.location.country.LocalizedName
+      this.$store.commit('updateExpiration', t.add(15, 'minutes'))
+      clearInterval(this.interval)
       this.interval = setInterval(() => {
         const t = moment.tz(this.location.timezone.name)
         this.display.time = t.format('hh:mm')
         this.display.meridiem = t.format('A')
+        if (t.isSameOrAfter(this.$store.state.expiration)) {
+          this.getWeatherData()
+        }
       }, 60000)
     },
     updateDispWeather () {
@@ -264,13 +269,8 @@ export default {
       forecast.shift()
       forecast.pop()
       this.dispWeather = { today, forecast }
-      const d = this.weather.dForecast.DailyForecasts[0].Day.IconPhrase
-      const n = this.weather.dForecast.DailyForecasts[0].Night.IconPhrase
-      if (n === d) {
-        this.display.forecastToday = `${d} all through out the day.`
-      } else {
-        this.display.forecastToday = `${d} in the morning. \\\n ${n} in the evening.`
-      }
+
+      this.display.forecastToday = this.weather.dForecast.Headline.Text
     }
   },
   beforeDestroy () {

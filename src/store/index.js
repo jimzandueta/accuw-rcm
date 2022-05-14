@@ -31,7 +31,8 @@ export default new Vuex.Store({
     },
     ipAddress: null,
     isSearched: false,
-    mainBG: null
+    mainBG: null,
+    expiration: null
   },
   getters: {
   },
@@ -50,6 +51,9 @@ export default new Vuex.Store({
     },
     toggleIsSearched (state) {
       state.isSearched = !state.isSearched
+    },
+    updateExpiration (state, exp) {
+      state.expiration = exp
     }
   },
   actions: {

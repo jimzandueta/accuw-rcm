@@ -5,10 +5,10 @@ const getWeatherData = async (t) => {
   let type = ''
   switch (t) {
     case 'h':
-      type = `hourly/${process.env.VUE_APP_FORECAST_HOUR}hour/`
+      type = 'hourly/12hour/'
       break
     case 'd':
-      type = `daily/${process.env.VUE_APP_FORECAST_DAY}day/`
+      type = 'daily/5day/'
       break
     default:
       type = null
