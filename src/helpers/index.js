@@ -4,6 +4,8 @@ import getWeatherData from './getWeatherData'
 import getCoordinatesLocation from './getCoordinatesLocation'
 import getImg from './getImg'
 import getWicon from './getWicon'
+import searchLocation from './searchLocation'
+import getKeyLocation from './getKeyLocation'
 
 const helpers = {
   getIpAddress,
@@ -11,7 +13,9 @@ const helpers = {
   getWeatherData,
   getCoordinatesLocation,
   getImg,
-  getWicon
+  getWicon,
+  searchLocation,
+  getKeyLocation
 }
 
 export default helpers
@@ -21,5 +25,7 @@ export {
   getWeatherData,
   getCoordinatesLocation,
   getImg,
-  getWicon
+  getWicon,
+  searchLocation,
+  getKeyLocation
 }

@@ -4,7 +4,6 @@ const getWicon = (isDay, phrase) => {
   const f = weatherIcons.filter(d => {
     return d.day === isDay && String(d.text).toLowerCase() === phrase
   })
-  console.log('f', f)
   if (!f.length) return require('../assets/weather-icons/1.svg')
   return require(`../assets/weather-icons/${f[0].icon}.svg`)
 }

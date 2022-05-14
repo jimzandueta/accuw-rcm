@@ -1,6 +1,19 @@
 <template>
   <div class="home">
     <div class="main-j is-full" :style="mainBGStyle">
+      <b-field class="searchbar-container">
+          <b-autocomplete
+            v-model="searchInput"
+            :data="searchRes"
+            field="disp"
+            rounded
+            custom-class="searchbar"
+            icon-right="magnify"
+            clearable
+            @select="option => updateLocation(option)">
+            <template #empty>No results found</template>
+        </b-autocomplete>
+      </b-field>
       <div class="upper-panel columns">
         <div class="dateTime column is-two-thirds">
           <div><span class="time">{{ display.time }}</span> <span class="meridiem"> {{ display.meridiem }}</span></div>
@@ -55,7 +68,7 @@
 <script>
 import moment from 'moment-timezone'
 
-import { getIpAddress, getIpLocation, getCoordinatesLocation, getWeatherData, getImg, getWicon } from '../helpers'
+import { getIpAddress, getIpLocation, getCoordinatesLocation, getWeatherData, getImg, getWicon, searchLocation, getKeyLocation } from '../helpers'
 
 export default {
   name: 'HomeView',
@@ -84,6 +97,18 @@ export default {
       return {
         backgroundImage: `url(${this.mainBG})`
       }
+    },
+    searchInput: {
+      get () {
+        return this.debouncedSearchInput
+      },
+      set (val) {
+        if (this.searchtimeout) clearTimeout(this.searchtimeout)
+        this.searchtimeout = setTimeout(() => {
+          this.debouncedSearchInput = val
+          this.updateSearchRes(this.debouncedSearchInput)
+        }, 300)
+      }
     }
   },
   data () {
@@ -107,7 +132,10 @@ export default {
         },
         forecast: []
       },
-      interval: null
+      interval: null,
+      searchRes: null,
+      searchtimeout: null,
+      debouncedSearchInput: ''
     }
   },
   mounted () {
@@ -170,6 +198,29 @@ export default {
       this.$store.commit('updateMainBG', await getImg())
       this.getWeatherData()
     },
+    async updateSearchRes (search) {
+      this.searchRes = []
+      if (!search) return
+      const res = await searchLocation(search)
+      this.searchRes = res.map(e => {
+        return {
+          key: e.Key,
+          disp: `${e.LocalizedName} / ${e.Country.LocalizedName}`
+        }
+      })
+    },
+    async updateLocation (loc) {
+      if (!loc) return
+      this.$store.commit('toggleIsSearched')
+      const res = await getKeyLocation(loc.key)
+      if (res) {
+        this.location.coordinate.lat = res.GeoPosition.Latitude
+        this.location.coordinate.long = res.GeoPosition.Longitude
+        this.getLocationCoordinates()
+      }
+      this.searchInput = ''
+      this.$store.commit('toggleIsSearched')
+    },
 
     updateDisplay () {
       const t = moment.tz(this.location.timezone.name)
@@ -178,7 +229,7 @@ export default {
       this.display.meridiem = t.format('A')
       this.display.date = dt.format('dddd, DD MMMM YYYY')
       this.display.city = this.location.city
-      this.display.country = this.location.country.EnglishName
+      this.display.country = this.location.country.LocalizedName
       this.interval = setInterval(() => {
         const t = moment.tz(this.location.timezone.name)
         this.display.time = t.format('hh:mm')
@@ -245,8 +296,13 @@ export default {
     box-shadow: -2px 6px 9px 0px rgba(0,0,0,0.59);
     -webkit-box-shadow: -2px 6px 9px 0px rgba(0,0,0,0.59);
     -moz-box-shadow: -2px 6px 9px 0px rgba(0,0,0,0.59);
+    .searchbar-container {
+      margin: 1em;
+      width: 40%;
+      align-self: flex-end;
+    }
     .upper-panel {
-      background-color: rgba(252, 252, 252, 0.3);
+      background-color: rgba(252, 252, 252, 0.05);
       color: rgba(252, 252, 252, 0.3);
       height: 70%;
       margin: 0;
@@ -282,6 +338,7 @@ export default {
         .city {
           font-size: 4em;
           font-weight: 700;
+          line-height: 1.6em;
         }
         .country {
           margin-top: -0.75em;
@@ -386,5 +443,10 @@ export default {
       }
     }
   }
-
+</style>
+<style>
+  .searchbar {
+      font-size: 1em;
+      font-weight: 300;
+    }
 </style>
