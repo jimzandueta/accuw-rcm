@@ -57,7 +57,7 @@ $ npm run serve
 1. **Live Location** - Displays date, time, city, and weather data base on user location. Location is determined by:
      - using browser location (with user's permission)
      - checking IP address location
-2. **Persistent Data and Auto Update** - Weather data is saved in localstorage to prevent multiple request on the same location. Weather date is updated every 15 minutes, unless location is changed.
+2. **Persistent Data and Auto Update** - Weather data is saved in localstorage to prevent multiple request on the same location. Weather data is updated every 15 minutes, unless location is changed.
 3. **Search with Autocomplete** - Check date, time, and weather data in other locations by using the search feature.
 
 ## Improvements:
